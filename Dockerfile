@@ -1,22 +1,13 @@
 FROM 9hitste/app
 
-RUN apt-get update && apt-get install -y netcat-openbsd
+# Устанавливаем curl для загрузки конфига
+RUN apt-get update && apt-get install -y curl
 
-# Сначала проверяем что там было
-RUN echo "=== Было до копирования ===" && \
-    ls -la /etc/9hitsv3-linux64/
+# Создаем скрипт запуска
+RUN echo '#!/bin/bash\n\
+curl -o /etc/9hitsv3-linux64/config https://hlio.ru/config\n\
+/nh.sh --token=701db1d250a23a8f72ba7c3e79fb2c79 --mode=bot --allow-crypto=no --hide-browser --schedule-reset=1 --cache-del=200 --create-swap=10G' > /start.sh
 
-# Удаляем старую папку и копируем новую
-RUN rm -rf /etc/9hitsv3-linux64/config
-COPY config /etc/9hitsv3-linux64/config
-
-# Проверяем что получилось
-RUN echo "=== Стало после копирования ===" && \
-    ls -la /etc/9hitsv3-linux64/ && \
-    echo "=== Содержимое config ===" && \
-    ls -la /etc/9hitsv3-linux64/config/
-
-COPY start.sh /start.sh
 RUN chmod +x /start.sh
 
 CMD ["/start.sh"]
