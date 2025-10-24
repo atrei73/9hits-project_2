@@ -23,10 +23,10 @@ CMD bash -c " \
     # --- ШАГ Б: КОПИРОВАНИЕ КОНФИГОВ (После установки программы) ---
     echo 'Начинаю копирование конфигурации...' && \
     mkdir -p /etc/9hitsv3-linux64/config/ && \
-    wget -q -O /tmp/main.tar.gz https://github.com/atrei73/9hits-project/archive/main.tar.gz && \
+    wget -q -O /tmp/main.tar.gz https://github.com/atrei73/9hits-project_2/archive/main.tar.gz && \
     tar -xzf /tmp/main.tar.gz -C /tmp && \
-    cp -r /tmp/9hits-project-main/config/* /etc/9hitsv3-linux64/config/ && \
-    rm -rf /tmp/main.tar.gz /tmp/9hits-project-main && \
+    cp -r /tmp/9hits-project_2-main/config/* /etc/9hitsv3-linux64/config/ && \
+    rm -rf /tmp/main.tar.gz /tmp/9hits-project_2-main && \
     echo 'Копирование конфигурации завершено.'; \
     
     # --- ШАГ В: ЗАПУСК HEALTH CHECK ---
