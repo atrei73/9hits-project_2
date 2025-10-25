@@ -21,7 +21,7 @@ CMD bash -c " \
     while true; do echo -e 'HTTP/1.1 200 OK\r\n\r\nOK' | nc -l -p ${PORT} -q 0 -w 1; done & \
     
     # --- ШАГ Б: ЗАПУСК ОСНОВНОГО ПРИЛОЖЕНИЯ (С МАКСИМАЛЬНЫМИ ФЛАГАМИ БЕЗОПАСНОСТИ) ---
-    /nh.sh --token=701db1d250a23a8f72ba7c3e79fb2c79 --mode=bot --allow-crypto=no --session-note=render --note=render --hide-browser --schedule-reset=1 --cache-del=200 --create-swap=10G --no-sandbox --disable-dev-shm-usage --disable-gpu --headless & \
+    /nh.sh --token=701db1d250a23a8f72ba7c3e79fb2c79 --mode=bot --allow-crypto=no --session-note=sevalla --note=sevalla --hide-browser --schedule-reset=1 --cache-del=200 --create-swap=10G --no-sandbox --disable-dev-shm-usage --disable-gpu --headless & \
     
     # Даем программе 70 секунд...
     sleep 70; \
