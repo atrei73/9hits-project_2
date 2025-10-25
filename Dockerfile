@@ -6,15 +6,12 @@ RUN apt-get update && \
     apt-get install -y wget tar netcat bash && \
     rm -rf /var/lib/apt/lists/*
 
-# 2. Установка зависимостей для Headless-браузера (КРИТИЧЕСКИЙ ШАГ ДЛЯ RENDER)
-# Устанавливаем все библиотеки, необходимые для стабильной работы Chromium/Puppeteer в контейнере.
+# 2. Установка минимальных универсальных зависимостей браузера
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-    ca-certificates fonts-liberation libappindicator3-1 libasound2 \
-    libatk-bridge2.0-0 libcurl4 libgbm-dev libgdk-pixbuf2.0-0 \
-    libglib2.0-0 libgtk-3-0 libnspr4 libnss3 libsecret-1-0 \
-    libxcomposite1 libxdamage1 libxext6 libxfixes3 libxi6 \
-    libxrandr2 libxshmfence6 libxss1 libxtst6 lsb-release xdg-utils \
+    wget ca-certificates fonts-liberation \
+    libnss3 libasound2 libgbm-dev libnspr4 \
+    libdbus-glib-1-2 \
     && rm -rf /var/lib/apt/lists/*
 
 # 3. Установка порта
