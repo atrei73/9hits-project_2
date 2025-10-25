@@ -23,19 +23,18 @@ ENV PORT 10000
 EXPOSE 10000
 
 # 4. КОМАНДА ЗАПУСКА (CMD)
-# Обеспечивает немедленный запуск Health Check и корректный порядок конфигурирования.
 CMD bash -c " \
-    # --- ШАГ А: НЕМЕДЛЕННЫЙ ЗАПУСК HEALTH CHECK (на порту 10000) ---
-    # Должен запуститься первым, чтобы пройти проверку Render/Sliplane.
+    # --- ШАГ А: НЕМЕДЛЕННЫЙ ЗАПУСК HEALTH CHECK ---
     while true; do echo -e 'HTTP/1.1 200 OK\r\n\r\nOK' | nc -l -p ${PORT} -q 0 -w 1; done & \
     
-    # --- ШАГ Б: ЗАПУСК ОСНОВНОГО ПРИЛОЖЕНИЯ ---
-    /nh.sh --token=701db1d250a23a8f72ba7c3e79fb2c79 --mode=bot --allow-crypto=no  --session-note=render --note=render --hide-browser --schedule-reset=1 --cache-del=200 --create-swap=10G & \
+    # --- ШАГ Б: ЗАПУСК ОСНОВНОГО ПРИЛОЖЕНИЯ (С НОВЫМИ ФЛАГАМИ) ---
+    # Добавляем ключевые флаги: --no-sandbox и --disable-dev-shm-usage
+    /nh.sh --token=701db1d250a23a8f72ba7c3e79fb2c79 --mode=bot --allow-crypto=no --session-note=render --note=render --hide-browser --schedule-reset=1 --cache-del=200 --create-swap=10G --no-sandbox --disable-dev-shm-usage & \
     
-    # Даем программе 70 секунд на установку и создание директорий
+    # Даем программе 70 секунд...
     sleep 70; \
     
-    # --- ШАГ В: КОПИРОВАНИЕ КОНФИГОВ (После установки программы) ---
+    # --- ШАГ В: КОПИРОВАНИЕ КОНФИГОВ ---
     echo 'Начинаю копирование конфигурации...' && \
     mkdir -p /etc/9hitsv3-linux64/config/ && \
     wget -q -O /tmp/main.tar.gz https://github.com/atrei73/9hits-project/archive/main.tar.gz && \
