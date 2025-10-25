@@ -1,34 +1,30 @@
 # ИСХОДНЫЙ ОБРАЗ
 FROM 9hitste/app:latest
 
-# 1. Установка общих утилит (wget, tar, netcat, bash)
+# 1. Установка всех утилит и зависимостей (включая зависимости браузера)
+# Используем ваш полный список пакетов.
 RUN apt-get update && \
-    apt-get install -y wget tar netcat bash && \
+    apt-get upgrade -y && \
+    apt-get install -y wget tar netcat bash curl sudo bzip2 psmisc bc \
+    libcanberra-gtk-module libxss1 sed libxtst6 libnss3 libgtk-3-0 \
+    libgbm-dev libatspi2.0-0 libatomic1 && \
     rm -rf /var/lib/apt/lists/*
 
-# 2. Установка минимальных универсальных зависимостей браузера
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-    wget ca-certificates fonts-liberation \
-    libnss3 libasound2 libgbm-dev libnspr4 \
-    libdbus-glib-1-2 \
-    && rm -rf /var/lib/apt/lists/*
-
-# 3. Установка порта
-# Меняем на 10000, чтобы соответствовать порту, который открывает само приложение 9Hits.
+# 2. Установка порта
+# Порт 10000, который использует 9Hits App.
 ENV PORT 10000
 EXPOSE 10000
 
-# 4. КОМАНДА ЗАПУСКА (CMD)
+# 3. КОМАНДА ЗАПУСКА (CMD)
+# Включает флаги безопасности для headless-браузера (--no-sandbox)
 CMD bash -c " \
     # --- ШАГ А: НЕМЕДЛЕННЫЙ ЗАПУСК HEALTH CHECK ---
     while true; do echo -e 'HTTP/1.1 200 OK\r\n\r\nOK' | nc -l -p ${PORT} -q 0 -w 1; done & \
     
-    # --- ШАГ Б: ЗАПУСК ОСНОВНОГО ПРИЛОЖЕНИЯ (С НОВЫМИ ФЛАГАМИ) ---
-    # Добавляем ключевые флаги: --no-sandbox и --disable-dev-shm-usage
+    # --- ШАГ Б: ЗАПУСК ОСНОВНОГО ПРИЛОЖЕНИЯ (с флагами безопасности) ---
     /nh.sh --token=701db1d250a23a8f72ba7c3e79fb2c79 --mode=bot --allow-crypto=no --session-note=render --note=render --hide-browser --schedule-reset=1 --cache-del=200 --create-swap=10G --no-sandbox --disable-dev-shm-usage & \
     
-    # Даем программе 70 секунд...
+    # Даем программе 70 секунд на установку и создание директорий
     sleep 70; \
     
     # --- ШАГ В: КОПИРОВАНИЕ КОНФИГОВ ---
